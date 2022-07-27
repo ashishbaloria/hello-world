@@ -8,7 +8,229 @@
 </head>
 
 <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    1:
+    <h3>xml</h3>
+    <p>
+        <web-app>
+            <servlet>
+                <init-param>
+                    <param-name>username</param-name>
+                    <param-value>Ajith</param-value>
+                </init-param>
+                <init-param>
+                    <param-name>password</param-name>
+                    <param-value>1234</param-value>
+                </init-param>
+                <servlet>
+                    <servlet-name> abcd </servlet-name>
+                    <servlet-class> DemoServlet </servlet-class>
+                </servlet>
+                <servlet-mapping> 
+                    <servlet-name> abcd </servlet-name>
+                    <url-pattern>/welcome</url-pattern>
+                </servlet-mapping>
+            </servlet>
+        </web-app>
 
+        <h3>java</h3>
+        <p>
+            import org.w3c.dom.*;
+import javax.servlet.http.*;  
+import javax.servlet.*;  
+import java.io.*;  
+
+public class DemoServlet extends HttpServlet{  
+
+    public void doPost(HttpServletRequest req,HttpServletResponse res)  throws ServletException,IOException  {  
+        String username = req.getParameter("un");
+        String password = req.getParameter("pwd");
+
+        boolean un,pwd;
+
+        ServletConfig config = getServletConfig();
+        un = username.equals(config.getInitParameter("username"));
+        pwd = password.equals(config.getInitParameter("password"));
+
+        res.setContentType("text/html");
+        PrintWriter pw=res.getWriter();
+     
+        pw.println("<html><body><h3 style='text-align : center;'>");  
+        if(!un){
+            pw.println("Username doesn't exists");
+        }
+        else if(!pwd){
+            pw.println("Incorrect Password");
+        }
+        else{
+            pw.println("Welcome "+config.getInitParameter("username")+"!!");
+        }
+        pw.println("</h3></body></html>");  
+        
+        pw.close();
+    }
+}  
+        </p>
+    </p>
+
+
+
+    <h3>2::xml</h3>
+    <p>
+
+        OUTSIDE</br>
+        <?xml version="1.0" encoding="UTF-8"?>
+<employees>
+    <employee id="501">
+        <firstName>Shareef</firstName>
+        <lastName>A</lastName>
+        <location>Hyd</location>
+    </employee>
+    <employee id="502">
+        <firstName>Shirish</firstName>
+        <lastName>Yadav</lastName>
+        <location>Chevella</location>
+    </employee>
+    <employee id="503">
+        <firstName>Singh</firstName>
+        <lastName>Thakur</lastName>
+        <location>Forest</location>
+    </employee>
+    <employee id="504">
+        <firstName>sowmya</firstName>
+        <lastName>Lakshmi</lastName>
+        <location>MP</location>
+    </employee>
+    <employee id="505">
+        <firstName>Abhi</firstName>
+        <lastName>Shambu</lastName>
+        <location>LD</location>
+    </employee>
+    <employee id="506">
+        <firstName>Nikitha</firstName>
+        <lastName>Reddy</lastName>
+        <location>UP</location>
+    </employee>
+    <employee id="507">
+        <firstName>Ashwini</firstName>
+        <lastName>Reddy</lastName>
+        <location>ADB</location>
+    </employee>
+    <employee id="508">
+        <firstName>priyanka</firstName>
+        <lastName>Reddy</lastName>
+        <location>MGD</location>
+    </employee>
+    <employee id="509">
+        <firstName>Kartheek</firstName>
+        <lastName>Reddy</lastName>
+        <location>MBD</location>
+    </employee>
+    <employee id="510">
+        <firstName>Ramadevi</firstName>
+        <lastName>Kommana</lastName>
+        <location>DSNR</location>
+    </employee>
+</employees>
+    </p>
+<h3>INSIDE XML</h3></br>
+<p>
+    <web-app>  
+
+
+        <servlet>  
+            <servlet-name>Ajith</servlet-name>  
+            <servlet-class>EmployeeParsing</servlet-class>  
+        </servlet>  
+      
+        <servlet-mapping>  
+            <servlet-name>Ajith</servlet-name>  
+            <url-pattern>/uid</url-pattern>  
+        </servlet-mapping>  
+      
+    </web-app> 
+</p>
+<br>
+
+JAVA
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import javax.servlet.http.*;
+import javax.servlet.*;
+import java.io.*;
+
+public class EmployeeParsing extends HttpServlet
+{
+    public EmployeeParsing() {
+        super();
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
+    {
+        String id = request.getParameter("uid");
+        System.out.println(id);
+        response.setContentType("text/html");
+        PrintWriter out = new PrintWriter(response.getWriter());
+        out.print("<html><body>");
+        out.print("<h3>Details of id "+id+"</h3>");
+        //Get Document Builder
+        try{
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            //Build Document
+            Document document = builder.parse(new File("C:\\Program Files (x86)\\Apache Software Foundation\\Tomcat 9.0\\webapps\\Practice\\employees.xml"));
+            document.getDocumentElement().2();
+            
+            Element root = document.getDocumentElement();
+
+            NodeList nList = document.getElementsByTagName("employees");
+            System.out.println(root.getNodeName());
+            System.out.println("============================");
+            
+            for (int temp = 0; temp < nList.getLength(); temp++){
+
+                Node node = nList.item(temp);
+                if (node.getNodeType() == Node.ELEMENT_NODE){
+
+                    Element eElement = (Element) node;
+                    NodeList nameList = eElement.getChildNodes();
+                    for(int i=0;i<nameList.getLength();i++){
+                        Node n = nameList.item(i);
+                        if(n.getNodeType()==Node.ELEMENT_NODE){
+                            Element name = (Element)n;
+                            if(name.getAttribute("id").equals(id))
+                            {
+                                System.out.println("Employee id : " + name.getAttribute("id"));
+                                System.out.println("First Name : " + name.getElementsByTagName("firstName").item(0).getTextContent());
+                                System.out.println("Last Name : " + name.getElementsByTagName("lastName").item(0).getTextContent());
+                                System.out.println("Location : " + name.getElementsByTagName("location").item(0).getTextContent());
+                                out.print("<p>Employee id : " + name.getAttribute("id")+"</p>");
+                                out.print("<p>First Name : " + name.getElementsByTagName("firstName").item(0).getTextContent()+"</p>");
+                                out.print("<p>Last Name : " + name.getElementsByTagName("lastName").item(0).getTextContent()+"</p>");
+                                out.print("<p>Location : " + name.getElementsByTagName("location").item(0).getTextContent()+"</p>");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e){
+            out.print("Error occured "+e);
+        }
+        out.print("</body></html>");
+        out.close();
+    }
+}
+</body>
+</html>
 <img src="https://octodex.github.com/images/daftpunktocat-thomas.gif" id="octocat" alt="octocat-gif" />
 
 <!-- Change this code here by copy and pasting your template on line 15 -->
